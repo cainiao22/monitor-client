@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qding.bigdata.monitorjobClient.dao.ds.MonitorJobDao">
+	<resultMap id="BaseResultMap" type="com.qding.bigdata.monitorjobClient.model.MonitorJob">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="meta_table_id" property="metaTableId" jdbcType="VARCHAR" />
+		<result column="monitor_sql" property="monitorSql" jdbcType="VARCHAR" />
+		<result column="value_min" property="valueMin" jdbcType="FLOAT" />
+		<result column="value_max" property="valueMax" jdbcType="FLOAT" />
+		<result column="enable_monitor" property="enableMonitor" jdbcType="INTEGER" />
+		<result column="monitorjob_schedule_hour" property="monitorJobScheduleHour" jdbcType="INTEGER" />
+		<result column="monitorjob_schedule_minute" property="monitorJobScheduleMinute" jdbcType="INTEGER" />
+		<result column="priority" property="priority" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="monitor_name" property="monitorName" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="base_column_list"> id,meta_table_id,monitor_sql,value_min,value_max,enable_monitor,monitorjob_schedule_hour
+	,monitorjob_schedule_minute,priority,create_time,update_time,monitor_name
+	</sql>
+	
+	<select id="listScheduledMonitorJob" resultMap="BaseResultMap" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJob">
+		select
+	*
+		from ds_meta_table_monitor
+		where enable_monitor=1
+		and (monitorjob_schedule_hour=#{monitorJobScheduleHour} OR monitorjob_schedule_hour='-1')
+		and monitorjob_schedule_minute=#{monitorJobScheduleMinute}
+	</select>
+	
+	
+	<select id="getById" resultMap="BaseResultMap" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJob">
+		select
+		<include refid="base_column_list" />
+		from ds_meta_table_monitor
+		where id=#{id} limit 1
+	</select>
+
+	<select id="getMonitorJobById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="base_column_list" />
+		from ds_meta_table_monitor
+		where id=#{monitorJobId} limit 1
+	</select>
+
+	<select id="getEnabledMonitorJobByTableId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="base_column_list" />
+		from ds_meta_table_monitor
+		where meta_table_id=#{tableId} AND enable_monitor=1
+	</select>
+</mapper>

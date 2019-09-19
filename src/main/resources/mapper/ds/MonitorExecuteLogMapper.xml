@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qding.bigdata.monitorjobClient.dao.ds.MonitorJobExecuteLogDao">
+	<resultMap id="BaseResultMap" type="com.qding.bigdata.monitorjobClient.model.MonitorJobExecuteLog">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="monitor_queue_id" property="monitorQueueId" jdbcType="VARCHAR" />
+		<result column="monitor_log" property="monitorLog" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="listScheduledEtlJob" resultMap="BaseResultMap" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobExecuteLog">
+		select
+	*
+		from ds_meta_table_monitor
+		where enable_monitor=1
+		and monitorjob_schedule_hour=#{monitorJobScheduleHour}
+		and monitorjob_schedule_minute=#{monitorJobScheduleMinute}
+	</select>
+<insert id="addLog" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobExecuteLog">
+INSERT INTO ds_monitor_execute_log(
+            id, monitor_queue_id, create_time, monitor_log)
+    VALUES (#{id}, #{monitorQueueId}, #{createTime}, #{monitorLog});
+
+	
+	</insert>
+</mapper>

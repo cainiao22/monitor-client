@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qding.bigdata.monitorjobClient.dao.ds.MonitorJobQueueDao">
+	<resultMap id="BaseResultMap" type="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="execute_result_id" jdbcType="CHAR" property="executeResultId" />
+        <result column="meta_table_id" jdbcType="CHAR" property="metaTableId" />
+		<result column="table_name" property="tableName" jdbcType="VARCHAR" />
+		<result column="table_alias" property="tableAlias" jdbcType="VARCHAR" />
+		<result column="monitor_job_id" property="monitorJobId" jdbcType="VARCHAR" />
+		<result column="db_type" property="dbType" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="schedule_time" property="scheduleTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="sql" property="sql" jdbcType="VARCHAR" />
+		<result column="job_unique_id" property="jobUniqueId" jdbcType="VARCHAR" />
+		<result column="data_date" property="dataDate" jdbcType="DATE" />
+		<result column="hash_code" property="hashCode" jdbcType="INTEGER" />
+	</resultMap>
+ <insert id="addMonitorJobQueue" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue">
+INSERT INTO ds_monitor_queue(
+            id,meta_table_id,monitor_job_id, db_type, `type`, `table_name`,table_alias, `sql`, schedule_time, status, create_time,job_unique_id,priority,data_date, hash_code)
+    VALUES (#{id},#{metaTableId},#{monitorJobId}, #{dbType}, #{type}, #{tableName}, #{tableAlias}, #{sql}, #{scheduleTime}, #{status}, #{createTime},#{jobUniqueId},#{priority},#{dataDate}, #{hashCode})
+	
+	</insert>
+	<select id="checkJobInQueue" resultType="Integer" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue">
+		select count(1)
+		from ds_monitor_queue
+		where job_unique_id=#{jobUniqueId} and status in ('Pending','Running')
+	</select>
+		<select id="listPendingQueue" resultMap="BaseResultMap" >
+		select
+	*
+		from ds_monitor_queue
+		where status='Pending' AND MOD(hash_code,#{totalCount})=#{currentIndex} order by priority desc ,schedule_time asc limit 1
+	</select>
+	<update id="updateJobStatus" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue">
+	update ds_monitor_queue set status=#{status} ,update_time=#{updateTime} where id=#{id}
+	</update>
+	<select id="queryByCondition" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue" resultMap="BaseResultMap">
+		SELECT *
+		from ds_monitor_queue
+		<where>
+            <if test="executeResultId != null">
+                and execute_result_id=#{executeResultId}
+            </if>
+            <if test="metaTableId != null">
+                and meta_table_id=#{metaTableId}
+            </if>
+			<if test="type != null">
+				and `type`=#{type}
+			</if>
+			<if test="tableName != null">
+				AND `table_name`=#{tableName}
+			</if>
+			<if test="dataDate != null">
+				and data_date=#{dataDate}
+			</if>
+		</where>
+		ORDER BY create_time DESC
+	</select>
+    <update id="updateExecutorResultId" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorJobQueue">
+        update ds_monitor_queue SET execute_result_id=#{executeResultId} WHERE id=#{id}
+    </update>
+</mapper>

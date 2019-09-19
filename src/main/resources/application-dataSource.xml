@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.3.xsd   
+           http://www.springframework.org/schema/context    
+           http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+    <!-- 激活annotation功能 -->
+    <context:annotation-config/>
+    <!-- 扫描指定package下所有带有如@controller,@services,@resource,并把所注释的注册为Spring Beans -->
+    <context:component-scan base-package="com.qding.bigdata.monitorjobClient"/>
+
+    <context:property-placeholder location="classpath:dataSource/*.properties"/>
+
+    <bean id = "dsDataSource" class = "com.alibaba.druid.pool.DruidDataSource" destroy-method = "close">
+        <!-- 数据库基本信息配置 -->
+        <property name = "url" value = "${datasource.ds.url}" />
+        <property name = "username" value = "${datasource.ds.username}" />
+        <property name = "password" value = "${datasource.ds.password}" />
+        <property name = "driverClassName" value = "${datasource.ds.driverClassName}" />
+        <property name = "filters" value = "${datasource.ds.filters}" />
+        <!-- 最大并发连接数 -->
+        <property name = "maxActive" value = "${datasource.ds.maxActive}" />
+        <!-- 初始化连接数量 -->
+        <property name = "initialSize" value = "${datasource.ds.initialSize}" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name = "maxWait" value = "${datasource.ds.maxWait}" />
+        <!-- 最小空闲连接数 -->
+        <property name = "minIdle" value = "${datasource.ds.minIdle}" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name = "timeBetweenEvictionRunsMillis" value ="${datasource.ds.timeBetweenEvictionRunsMillis}" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name = "minEvictableIdleTimeMillis" value ="${datasource.ds.minEvictableIdleTimeMillis}" />
+        <property name = "validationQuery" value = "${datasource.ds.validationQuery}" />
+        <property name = "testWhileIdle" value = "${datasource.ds.testWhileIdle}" />
+        <property name = "testOnBorrow" value = "${datasource.ds.testOnBorrow}" />
+        <property name = "testOnReturn" value = "${datasource.ds.testOnReturn}" />
+        <property name = "maxOpenPreparedStatements" value ="${datasource.ds.maxOpenPreparedStatements}" />
+        <!-- 打开 removeAbandoned 功能 -->
+        <property name = "removeAbandoned" value = "${datasource.ds.removeAbandoned}" />
+        <!-- 1800 秒，也就是 30 分钟 -->
+        <property name = "removeAbandonedTimeout" value ="${datasource.ds.removeAbandonedTimeout}" />
+        <!-- 关闭 abanded 连接时输出错误日志 -->
+        <property name = "logAbandoned" value = "${datasource.ds.logAbandoned}" />
+    </bean>
+    <bean id = "dwDataSource" class = "com.alibaba.druid.pool.DruidDataSource" destroy-method = "close">
+        <!-- 数据库基本信息配置 -->
+        <property name = "url" value = "${datasource.dw.url}" />
+        <property name = "username" value = "${datasource.dw.username}" />
+        <property name = "password" value = "${datasource.dw.password}" />
+        <property name = "driverClassName" value = "${datasource.dw.driverClassName}" />
+        <property name = "filters" value = "${datasource.dw.filters}" />
+        <!-- 最大并发连接数 -->
+        <property name = "maxActive" value = "${datasource.dw.maxActive}" />
+        <!-- 初始化连接数量 -->
+        <property name = "initialSize" value = "${datasource.dw.initialSize}" />
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name = "maxWait" value = "${datasource.dw.maxWait}" />
+        <!-- 最小空闲连接数 -->
+        <property name = "minIdle" value = "${datasource.dw.minIdle}" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name = "timeBetweenEvictionRunsMillis" value ="${datasource.dw.timeBetweenEvictionRunsMillis}" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name = "minEvictableIdleTimeMillis" value ="${datasource.dw.minEvictableIdleTimeMillis}" />
+        <property name = "validationQuery" value = "${datasource.dw.validationQuery}" />
+        <property name = "testWhileIdle" value = "${datasource.dw.testWhileIdle}" />
+        <property name = "testOnBorrow" value = "${datasource.dw.testOnBorrow}" />
+        <property name = "testOnReturn" value = "${datasource.dw.testOnReturn}" />
+        <property name = "maxOpenPreparedStatements" value ="${datasource.dw.maxOpenPreparedStatements}" />
+        <!-- 打开 removeAbandoned 功能 -->
+        <property name = "removeAbandoned" value = "${datasource.dw.removeAbandoned}" />
+        <!-- 1800 秒，也就是 30 分钟 -->
+        <property name = "removeAbandonedTimeout" value ="${datasource.dw.removeAbandonedTimeout}" />
+        <!-- 关闭 abanded 连接时输出错误日志 -->
+        <property name = "logAbandoned" value = "${datasource.dw.logAbandoned}" />
+    </bean>
+    <bean id="dsSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dsDataSource"/>
+        <property name="typeAliasesPackage" value="com.qding.bigdata.monitorjobClient.model"/>
+        <property name="mapperLocations" value="classpath:/mapper/ds/*.xml"/>
+    </bean>
+    <bean id="dwSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dwDataSource"/>
+        <property name="typeAliasesPackage" value="com.qding.bigdata.monitorjobClient.model" />
+        <property name="mapperLocations" value="classpath:mapper/dw/*.xml"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qding.bigdata.monitorjobClient.dao.ds"/>
+        <property name="sqlSessionFactoryBeanName" value="dsSqlSessionFactory"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qding.bigdata.monitorjobClient.dao.dw"/>
+        <property name="sqlSessionFactoryBeanName" value="dwSqlSessionFactory"/>
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="dsSqlSessionFactory" />
+    </bean>
+</beans>

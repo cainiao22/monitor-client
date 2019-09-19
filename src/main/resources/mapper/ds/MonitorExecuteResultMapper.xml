@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qding.bigdata.monitorjobClient.dao.ds.MonitorExecutorResultDao">
+  <resultMap id="BaseResultMap" type="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="meta_table_id" jdbcType="CHAR" property="metaTableId" />
+    <result column="schedule_time" jdbcType="TIMESTAMP" property="scheduleTime" />
+    <result column="current_status" jdbcType="VARCHAR" property="currentStatus" />
+    <result column="data_date" jdbcType="VARCHAR" property="dataDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, meta_table_id, schedule_time, current_status, data_date, create_time,
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ds_monitor_execute_result
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ds_monitor_execute_result
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult">
+    insert into ds_monitor_execute_result (id, meta_table_id, schedule_time,
+    current_status, data_date, create_time,
+    update_time)
+    values (#{id,jdbcType=CHAR}, #{metaTableId,jdbcType=CHAR}, #{scheduleTime},
+    #{currentStatus,jdbcType=VARCHAR}, #{dataDate,jdbcType=VARCHAR}, #{createTime},
+    #{updateTime})
+  </insert>
+  <insert id="save" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult">
+    insert into ds_monitor_execute_result
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="metaTableId != null">
+        meta_table_id,
+      </if>
+      <if test="scheduleTime != null">
+        schedule_time,
+      </if>
+      <if test="currentStatus != null">
+        current_status,
+      </if>
+      <if test="dataDate != null">
+        data_date,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="metaTableId != null">
+        #{metaTableId},
+      </if>
+      <if test="scheduleTime != null">
+        #{scheduleTime},
+      </if>
+      <if test="currentStatus != null">
+        #{currentStatus},
+      </if>
+      <if test="dataDate != null">
+        #{dataDate},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult">
+    update ds_monitor_execute_result
+    <set>
+      <if test="metaTableId != null">
+        meta_table_id = #{metaTableId},
+      </if>
+      <if test="scheduleTime != null">
+        schedule_time = #{scheduleTime},
+      </if>
+      <if test="currentStatus != null">
+        current_status = #{currentStatus},
+      </if>
+      <if test="dataDate != null">
+        data_date = #{dataDate},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult">
+    update ds_monitor_execute_result
+    set meta_table_id = #{metaTableId,jdbcType=CHAR},
+    schedule_time = #{scheduleTime},
+    current_status = #{currentStatus,jdbcType=VARCHAR},
+    data_date = #{dataDate,jdbcType=VARCHAR},
+    create_time = #{createTime},
+    update_time = #{updateTime}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="query" parameterType="com.qding.bigdata.monitorjobClient.model.MonitorExecuteResult" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM ds_monitor_execute_result
+    <where>
+      <if test="metaTableId != null" >
+        meta_table_id = #{metaTableId,jdbcType=CHAR}
+      </if>
+      <if test="scheduleTime != null" >
+        and schedule_time = #{scheduleTime}
+      </if>
+      <if test="currentStatus != null" >
+        and current_status = #{currentStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="dataDate != null" >
+        and data_date = #{dataDate,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime}
+      </if>
+      <if test="updateTime != null" >
+        and update_time = #{updateTime}
+      </if>
+    </where>
+  </select>
+</mapper>
